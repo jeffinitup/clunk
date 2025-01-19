@@ -1,7 +1,25 @@
-[gd_scene load_steps=3 format=3 uid="uid://dthqgv4b565b"]
+[gd_scene load_steps=8 format=3 uid="uid://dthqgv4b565b"]
 
 [ext_resource type="Script" path="res://scripts/editor.gd" id="1_ohh0g"]
 [ext_resource type="Script" path="res://scripts/draw.gd" id="2_762bk"]
+[ext_resource type="Script" path="res://scripts/cell_manager.gd" id="3_h0f4w"]
+[ext_resource type="Script" path="res://scripts/interface.gd" id="4_evutu"]
+[ext_resource type="Script" path="res://scripts/tool_manager.gd" id="5_g05hf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o3cbe"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="Theme" id="Theme_np3d2"]
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_o3cbe")
 
 [node name="editor" type="Node"]
 script = ExtResource("1_ohh0g")
@@ -10,3 +28,71 @@ script = ExtResource("1_ohh0g")
 script = ExtResource("2_762bk")
 
 [node name="cell_manager" type="Node2D" parent="."]
+script = ExtResource("3_h0f4w")
+
+[node name="interface" type="CanvasLayer" parent="."]
+script = ExtResource("4_evutu")
+
+[node name="gui" type="MarginContainer" parent="interface"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="main" type="HBoxContainer" parent="interface/gui"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 0
+
+[node name="panel" type="PanelContainer" parent="interface/gui/main"]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+theme = SubResource("Theme_np3d2")
+
+[node name="sort" type="VBoxContainer" parent="interface/gui/main/panel"]
+layout_mode = 2
+
+[node name="header1" type="Label" parent="interface/gui/main/panel/sort"]
+layout_mode = 2
+text = "Toolkit"
+
+[node name="tools" type="ItemList" parent="interface/gui/main/panel/sort"]
+layout_mode = 2
+size_flags_vertical = 0
+allow_search = false
+auto_height = true
+item_count = 4
+item_0/text = "Select"
+item_1/text = "Vertex"
+item_2/text = "Polygon"
+item_3/text = "Spline"
+
+[node name="header2" type="Label" parent="interface/gui/main/panel/sort"]
+layout_mode = 2
+text = "Object Properties"
+
+[node name="properties" type="PanelContainer" parent="interface/gui/main/panel/sort"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="container" type="VBoxContainer" parent="interface/gui/main/panel/sort/properties"]
+layout_mode = 2
+
+[node name="showhide" type="Button" parent="interface/gui/main"]
+custom_minimum_size = Vector2(27, 102)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+text = ">"
+
+[node name="tool_manager" type="Node" parent="interface"]
+script = ExtResource("5_g05hf")
+
+[connection signal="item_selected" from="interface/gui/main/panel/sort/tools" to="interface" method="tool_selected"]
+[connection signal="pressed" from="interface/gui/main/showhide" to="interface" method="show_hide"]

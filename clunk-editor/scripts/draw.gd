@@ -32,19 +32,25 @@ func _draw() -> void:
 		draw_polyline(line, Color.BLUE)
 		
 		# Stop drawing if less than three points
-		if poly.size() < 3:
+		if poly.size() < 3 || !should_draw(poly):
 			return
 		
 		draw_colored_polygon(poly, Color(Color.WHITE, fac))
 
-func _process(delta: float) -> void:
-	queue_redraw()
+func _unhandled_input(event : InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		var mpos := get_global_mouse_position()
+		for polygon in editor.poly_list:
+			if Geometry2D.is_point_in_polygon(mpos, polygon.points):
+				polygon.focused = true
+				continue
+			polygon.focused = false
 
 func _physics_process(delta : float) -> void:
-	# Check for mouse overlap
-	var mpos := get_global_mouse_position()
-	for polygon in editor.poly_list:
-		if Geometry2D.is_point_in_polygon(mpos, polygon.points):
-			polygon.focused = true
-			continue
-		polygon.focused = false
+	# Redraw
+	queue_redraw()
+
+func should_draw(points : PackedVector2Array) -> bool:
+	if Geometry2D.triangulate_polygon(points).is_empty():
+		return false
+	return true
