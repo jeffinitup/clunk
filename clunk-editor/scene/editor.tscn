@@ -8,3 +8,5 @@ script = ExtResource("1_ohh0g")
 
 [node name="draw" type="Node2D" parent="."]
 script = ExtResource("2_762bk")
+
+[node name="cell_manager" type="Node2D" parent="."]
