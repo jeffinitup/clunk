@@ -12,6 +12,7 @@ config_version=5
 
 config/name="CLUNK Editor"
 config/description="Level creator and serializer for CLANG game"
+config/version="0.1"
 run/main_scene="res://scene/editor.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://icon.svg"
@@ -20,6 +21,7 @@ config/icon="res://icon.svg"
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
+window/subwindows/embed_subwindows=false
 
 [rendering]
 

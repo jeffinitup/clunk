@@ -10,7 +10,7 @@ func _draw() -> void:
 	var fac := 0.5 + (sin(time * 2) * 0.25)
 	
 	# Draw existing polygons
-	for polygon in editor.poly_list:
+	for polygon in editor.level.polygons:
 		# If polygon has less than three points, dont draw
 		if polygon.points.size() < 3:
 			continue
@@ -36,15 +36,6 @@ func _draw() -> void:
 			return
 		
 		draw_colored_polygon(poly, Color(Color.WHITE, fac))
-
-func _unhandled_input(event : InputEvent) -> void:
-	if event is InputEventMouseMotion:
-		var mpos := get_global_mouse_position()
-		for polygon in editor.poly_list:
-			if Geometry2D.is_point_in_polygon(mpos, polygon.points):
-				polygon.focused = true
-				continue
-			polygon.focused = false
 
 func _physics_process(delta : float) -> void:
 	# Redraw

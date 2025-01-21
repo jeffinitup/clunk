@@ -22,15 +22,17 @@ func create_tool(i : int) -> Tool:
 		Vertex:
 			tool = Tool.Vertex.new()
 			
+			tool.poly_size = editor.level.polygons.size()
 			tool.temp_commit.connect(editor.set_poly_cur.bind())
-			tool.commit.connect(editor.add_to_polygon_list.bind())
-			tool.size_request.connect(func() -> void: 
-				editor.polys_updated.emit(editor.poly_list))
+			editor.polys_updated.connect(tool.update_size.bind())
 		Polygon:
 			tool = Tool.Polygon.new()
 		Spline:
 			tool = Tool.Spline.new()
 	tool.name = tool.tool_name.to_lower()
+	tool.action_manager = editor.action_manager
+	tool.editor = editor
+	editor.action_manager.action_modified.connect(tool._undo_redo.bind())
 	
 	if current != null:
 		current.queue_free()

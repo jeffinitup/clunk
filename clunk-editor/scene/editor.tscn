@@ -2,27 +2,17 @@
 
 [ext_resource type="Script" path="res://scripts/editor.gd" id="1_ohh0g"]
 [ext_resource type="Script" path="res://scripts/draw.gd" id="2_762bk"]
+[ext_resource type="Script" path="res://scripts/action_manager.gd" id="2_klb3c"]
 [ext_resource type="Script" path="res://scripts/cell_manager.gd" id="3_h0f4w"]
 [ext_resource type="Script" path="res://scripts/interface.gd" id="4_evutu"]
 [ext_resource type="Script" path="res://scripts/tool_manager.gd" id="5_g05hf"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o3cbe"]
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.1, 0.1, 0.1, 0.6)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-corner_detail = 5
-
-[sub_resource type="Theme" id="Theme_np3d2"]
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_o3cbe")
+[ext_resource type="Theme" uid="uid://c1q2tqv3nplm1" path="res://editor.tres" id="5_jei32"]
 
 [node name="editor" type="Node"]
 script = ExtResource("1_ohh0g")
+
+[node name="action_manager" type="Node" parent="."]
+script = ExtResource("2_klb3c")
 
 [node name="draw" type="Node2D" parent="."]
 script = ExtResource("2_762bk")
@@ -39,30 +29,79 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 32
-theme_override_constants/margin_right = 32
-theme_override_constants/margin_bottom = 32
+mouse_filter = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
-[node name="main" type="HBoxContainer" parent="interface/gui"]
+[node name="vsort" type="VSplitContainer" parent="interface/gui"]
 layout_mode = 2
-size_flags_horizontal = 0
+mouse_filter = 2
+split_offset = 150
+
+[node name="main" type="HBoxContainer" parent="interface/gui/vsort"]
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/separation = 0
 
-[node name="panel" type="PanelContainer" parent="interface/gui/main"]
+[node name="tabs" type="MenuBar" parent="interface/gui/vsort/main"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 0
+flat = true
+
+[node name="File" type="PopupMenu" parent="interface/gui/vsort/main/tabs"]
+auto_translate_mode = 1
+size = Vector2i(102, 100)
+item_count = 4
+item_0/text = "New Level"
+item_1/text = "Load Level"
+item_1/id = 1
+item_2/text = "Save Level"
+item_2/id = 2
+item_3/text = "Save Level As..."
+item_3/id = 3
+
+[node name="Edit" type="PopupMenu" parent="interface/gui/vsort/main/tabs"]
+auto_translate_mode = 1
+size = Vector2i(145, 174)
+item_count = 7
+item_0/text = "Copy"
+item_1/text = "Cut"
+item_1/id = 1
+item_2/text = "Paste"
+item_2/id = 2
+item_3/text = "Delete"
+item_3/id = 3
+item_4/id = 4
+item_4/separator = true
+item_5/text = "Level Properties"
+item_5/id = 5
+item_6/text = "Settings"
+item_6/id = 6
+
+[node name="showhide" type="Button" parent="interface/gui/vsort/main"]
+custom_minimum_size = Vector2(27, 102)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+text = "<"
+
+[node name="panel" type="PanelContainer" parent="interface/gui/vsort/main"]
 custom_minimum_size = Vector2(256, 0)
 layout_mode = 2
 size_flags_horizontal = 0
-theme = SubResource("Theme_np3d2")
+theme = ExtResource("5_jei32")
 
-[node name="sort" type="VBoxContainer" parent="interface/gui/main/panel"]
+[node name="sort" type="VBoxContainer" parent="interface/gui/vsort/main/panel"]
 layout_mode = 2
 
-[node name="header1" type="Label" parent="interface/gui/main/panel/sort"]
+[node name="header1" type="Label" parent="interface/gui/vsort/main/panel/sort"]
 layout_mode = 2
 text = "Toolkit"
 
-[node name="tools" type="ItemList" parent="interface/gui/main/panel/sort"]
+[node name="tools" type="ItemList" parent="interface/gui/vsort/main/panel/sort"]
 layout_mode = 2
 size_flags_vertical = 0
 allow_search = false
@@ -73,26 +112,32 @@ item_1/text = "Vertex"
 item_2/text = "Polygon"
 item_3/text = "Spline"
 
-[node name="header2" type="Label" parent="interface/gui/main/panel/sort"]
+[node name="header2" type="Label" parent="interface/gui/vsort/main/panel/sort"]
 layout_mode = 2
 text = "Object Properties"
 
-[node name="properties" type="PanelContainer" parent="interface/gui/main/panel/sort"]
+[node name="properties" type="PanelContainer" parent="interface/gui/vsort/main/panel/sort"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="container" type="VBoxContainer" parent="interface/gui/main/panel/sort/properties"]
+[node name="container" type="VBoxContainer" parent="interface/gui/vsort/main/panel/sort/properties"]
 layout_mode = 2
 
-[node name="showhide" type="Button" parent="interface/gui/main"]
-custom_minimum_size = Vector2(27, 102)
+[node name="console" type="PanelContainer" parent="interface/gui/vsort"]
 layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 4
-text = ">"
+size_flags_vertical = 3
+theme = ExtResource("5_jei32")
+
+[node name="text" type="RichTextLabel" parent="interface/gui/vsort/console"]
+layout_mode = 2
 
 [node name="tool_manager" type="Node" parent="interface"]
 script = ExtResource("5_g05hf")
 
-[connection signal="item_selected" from="interface/gui/main/panel/sort/tools" to="interface" method="tool_selected"]
-[connection signal="pressed" from="interface/gui/main/showhide" to="interface" method="show_hide"]
+[connection signal="level_loaded" from="." to="interface" method="on_level_load"]
+[connection signal="level_loaded" from="." to="action_manager" method="on_level_loaded"]
+[connection signal="action_made" from="action_manager" to="interface" method="print_to_console"]
+[connection signal="id_pressed" from="interface/gui/vsort/main/tabs/File" to="interface" method="file_option_pressed"]
+[connection signal="id_pressed" from="interface/gui/vsort/main/tabs/Edit" to="interface" method="edit_option_pressed"]
+[connection signal="pressed" from="interface/gui/vsort/main/showhide" to="interface" method="show_hide"]
+[connection signal="item_selected" from="interface/gui/vsort/main/panel/sort/tools" to="interface/tool_manager" method="create_tool"]
