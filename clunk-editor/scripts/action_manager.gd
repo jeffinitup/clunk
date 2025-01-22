@@ -13,6 +13,8 @@ var data_ref : Array[Variant] = []
 
 ## Action history manager
 @onready var history : UndoRedo = UndoRedo.new()
+## Editor reference
+@onready var editor : Editor = owner as Editor
 
 func _ready() -> void:
 	history.max_steps = DEPTH
@@ -29,7 +31,7 @@ func _shortcut_input(event: InputEvent) -> void:
 			return
 
 func on_level_loaded() -> void:
-	## Clear data ref and history
+	# Clear data ref and history
 	history.clear_history()
 	data_ref.clear()
 
@@ -52,10 +54,10 @@ func action_move_poly(poly : Editor.Polygon, action : Tool.Select.SelectAction) 
 func action_make_poly(poly : Editor.Polygon) -> void:
 	history.create_action("Add polygon to scene")
 		
-	## Add a data reference to stack
+	# Add a data reference to stack
 	data_ref.push_back(poly)
 	
-	## Redo/Undo
+	# Redo/Undo
 	history.add_do_method(func() -> void:
 		var hist_poly := data_ref.pop_back() as Editor.Polygon
 		owner.level.polygons.append(hist_poly)
@@ -69,5 +71,22 @@ func action_make_poly(poly : Editor.Polygon) -> void:
 		owner.polys_updated.emit(owner.level.polygons)
 	)
 	
-	## Commit
+	# Commit
+	history.commit_action()
+
+func action_update_level_property(property : String, value : Variant) -> void:
+	history.create_action("Change level property")
+	
+	# Redo/Undo
+	var original = editor.level.get(property)
+	history.add_do_property(editor.level, property, value)
+	history.add_do_method(func() -> void:
+		action_made.emit("Property %s changed to %s" % [property, value])
+	)
+	history.add_undo_property(editor.level, property, original)
+	history.add_undo_method(func() -> void:
+		action_made.emit("Property %s reverted")
+	)
+	
+	# Commit
 	history.commit_action()

@@ -4,6 +4,9 @@ class_name Interface extends CanvasLayer
 ## Lines to print
 const CONSOLE_HISTORY = 8
 
+## Level properties window
+@onready var level_properties_window := preload("res://scene/level_properties.tscn")
+
 ## Editor reference
 @onready var editor : Editor = owner as Editor
 ## Main gui panel
@@ -79,7 +82,16 @@ func file_option_pressed(id: int) -> void:
 			diag.file_selected.connect(file_selected_save.bind())
 
 func edit_option_pressed(id: int) -> void:
-	pass
+	match id:
+		# Level properties
+		5: 
+			var window : WindowLevelProperties = level_properties_window.instantiate()
+			window.field_changed.connect(editor.action_manager.action_update_level_property.bind())
+			window.level = editor.level
+			add_child(window)
+			window.show()
+		_:
+			pass
 
 func file_selected(path : String) -> void:
 	editor.level = Level.new(path)

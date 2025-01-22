@@ -1,5 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://c3g08cr604nnt"]
+[gd_scene load_steps=3 format=3 uid="uid://c3g08cr604nnt"]
 
+[ext_resource type="Script" path="res://scripts/window_palette_picker.gd" id="1_4jweu"]
 [ext_resource type="Theme" uid="uid://c1q2tqv3nplm1" path="res://editor.tres" id="1_ha6oo"]
 
 [node name="color_lut_picker" type="Window"]
@@ -9,6 +10,7 @@ size = Vector2i(375, 200)
 transient = true
 exclusive = true
 unresizable = true
+script = ExtResource("1_4jweu")
 
 [node name="margin" type="MarginContainer" parent="."]
 anchors_preset = 15
