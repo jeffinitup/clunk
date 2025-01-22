@@ -1,0 +1,154 @@
+[gd_scene load_steps=2 format=3 uid="uid://c3g08cr604nnt"]
+
+[ext_resource type="Theme" uid="uid://c1q2tqv3nplm1" path="res://editor.tres" id="1_ha6oo"]
+
+[node name="color_lut_picker" type="Window"]
+title = "Color LUT Picker"
+initial_position = 1
+size = Vector2i(375, 200)
+transient = true
+exclusive = true
+unresizable = true
+
+[node name="margin" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="sort" type="VBoxContainer" parent="margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="center" type="CenterContainer" parent="margin/sort"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
+
+[node name="grid" type="GridContainer" parent="margin/sort/center"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 8
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="margin/sort/center/grid"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme = ExtResource("1_ha6oo")
+edit_alpha = false
+
+[node name="ColorPickerButton2" type="ColorPickerButton" parent="margin/sort/center/grid"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme = ExtResource("1_ha6oo")
+edit_alpha = false
+
+[node name="ColorPickerButton3" type="ColorPickerButton" parent="margin/sort/center/grid"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme = ExtResource("1_ha6oo")
+edit_alpha = false
+
+[node name="ColorPickerButton4" type="ColorPickerButton" parent="margin/sort/center/grid"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme = ExtResource("1_ha6oo")
+edit_alpha = false
+
+[node name="ColorPickerButton5" type="ColorPickerButton" parent="margin/sort/center/grid"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme = ExtResource("1_ha6oo")
+edit_alpha = false
+
+[node name="ColorPickerButton6" type="ColorPickerButton" parent="margin/sort/center/grid"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme = ExtResource("1_ha6oo")
+edit_alpha = false
+
+[node name="ColorPickerButton7" type="ColorPickerButton" parent="margin/sort/center/grid"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme = ExtResource("1_ha6oo")
+edit_alpha = false
+
+[node name="ColorPickerButton8" type="ColorPickerButton" parent="margin/sort/center/grid"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme = ExtResource("1_ha6oo")
+edit_alpha = false
+
+[node name="ColorPickerButton9" type="ColorPickerButton" parent="margin/sort/center/grid"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme = ExtResource("1_ha6oo")
+edit_alpha = false
+
+[node name="ColorPickerButton10" type="ColorPickerButton" parent="margin/sort/center/grid"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme = ExtResource("1_ha6oo")
+edit_alpha = false
+
+[node name="ColorPickerButton11" type="ColorPickerButton" parent="margin/sort/center/grid"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme = ExtResource("1_ha6oo")
+edit_alpha = false
+
+[node name="ColorPickerButton12" type="ColorPickerButton" parent="margin/sort/center/grid"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme = ExtResource("1_ha6oo")
+edit_alpha = false
+
+[node name="ColorPickerButton13" type="ColorPickerButton" parent="margin/sort/center/grid"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme = ExtResource("1_ha6oo")
+edit_alpha = false
+
+[node name="ColorPickerButton14" type="ColorPickerButton" parent="margin/sort/center/grid"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme = ExtResource("1_ha6oo")
+edit_alpha = false
+
+[node name="ColorPickerButton15" type="ColorPickerButton" parent="margin/sort/center/grid"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme = ExtResource("1_ha6oo")
+edit_alpha = false
+
+[node name="ColorPickerButton16" type="ColorPickerButton" parent="margin/sort/center/grid"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme = ExtResource("1_ha6oo")
+edit_alpha = false
+
+[node name="save_load" type="HBoxContainer" parent="margin/sort"]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="save" type="Button" parent="margin/sort/save_load"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 10
+text = "Save .mpal"
+
+[node name="load" type="Button" parent="margin/sort/save_load"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 10
+text = "Load .mpal"
+
+[node name="ok" type="Button" parent="margin/sort"]
+layout_mode = 2
+size_flags_vertical = 10
+text = "OK"

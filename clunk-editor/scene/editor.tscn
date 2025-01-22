@@ -134,8 +134,8 @@ layout_mode = 2
 [node name="tool_manager" type="Node" parent="interface"]
 script = ExtResource("5_g05hf")
 
-[connection signal="level_loaded" from="." to="interface" method="on_level_load"]
 [connection signal="level_loaded" from="." to="action_manager" method="on_level_loaded"]
+[connection signal="level_loaded" from="." to="interface" method="on_level_load"]
 [connection signal="action_made" from="action_manager" to="interface" method="print_to_console"]
 [connection signal="id_pressed" from="interface/gui/vsort/main/tabs/File" to="interface" method="file_option_pressed"]
 [connection signal="id_pressed" from="interface/gui/vsort/main/tabs/Edit" to="interface" method="edit_option_pressed"]

@@ -1,0 +1,85 @@
+[gd_scene load_steps=3 format=3 uid="uid://uq5fasnwbvw7"]
+
+[ext_resource type="Theme" uid="uid://c1q2tqv3nplm1" path="res://editor.tres" id="1_5krxm"]
+[ext_resource type="Script" path="res://scripts/window_level_properties.gd" id="1_ij7nv"]
+
+[node name="level_properties" type="Window"]
+title = "Level Properties"
+initial_position = 2
+size = Vector2i(525, 200)
+exclusive = true
+script = ExtResource("1_ij7nv")
+
+[node name="margin" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_5krxm")
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="sort" type="VBoxContainer" parent="margin"]
+layout_mode = 2
+
+[node name="level_title" type="HBoxContainer" parent="margin/sort"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="info" type="Label" parent="margin/sort/level_title"]
+layout_mode = 2
+text = "Level Name :"
+
+[node name="name" type="LineEdit" parent="margin/sort/level_title"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Untitled"
+expand_to_text_length = true
+
+[node name="level_author" type="HBoxContainer" parent="margin/sort"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="info" type="Label" parent="margin/sort/level_author"]
+layout_mode = 2
+text = "Author :"
+
+[node name="name" type="LineEdit" parent="margin/sort/level_author"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Me"
+expand_to_text_length = true
+
+[node name="level_palette" type="HBoxContainer" parent="margin/sort"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="info" type="Label" parent="margin/sort/level_palette"]
+layout_mode = 2
+text = "Color Palette :"
+
+[node name="button" type="Button" parent="margin/sort/level_palette"]
+layout_mode = 2
+size_flags_horizontal = 10
+text = " Open LUT Definition"
+
+[node name="buttons" type="HBoxContainer" parent="margin/sort"]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="cancel" type="Button" parent="margin/sort/buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cancel"
+
+[node name="apply" type="Button" parent="margin/sort/buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "OK"
+
+[connection signal="text_changed" from="margin/sort/level_title/name" to="." method="title_changed"]

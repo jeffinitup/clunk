@@ -14,7 +14,7 @@ func _draw() -> void:
 		# If polygon has less than three points, dont draw
 		if polygon.points.size() < 3:
 			continue
-		draw_polygon(polygon.points, polygon.colors)
+		draw_colored_polygon(polygon.points, editor.level.palette.color[polygon.color])
 		
 		# Draw additional border if polygon is hovered over
 		if polygon.focused:

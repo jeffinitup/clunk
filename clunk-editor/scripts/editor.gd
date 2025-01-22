@@ -24,14 +24,13 @@ class Polygon extends Resource:
 	var focused : bool = false
 	var origin := Vector2()
 	var points := PackedVector2Array()
-	var colors := PackedColorArray()
+	var color := 0
 	
 	func _init(id : int):
 		self.rid = id
 	
-	func append(point : Vector2, color : Color = Color.WHITE) -> Polygon:
+	func append(point : Vector2) -> Polygon:
 		self.points.append(point)
-		self.colors.append(color)
 		return self
 	
 	## Calculates area using Gauss' shoelace formula
