@@ -7,7 +7,7 @@ signal action_modified()
 signal action_made(descriptor : String)
 
 ## Depth of history to keep track of
-const DEPTH = 10
+const DEPTH = 50
 ## Data references
 var data_ref : Array[Variant] = []
 
@@ -85,8 +85,64 @@ func action_update_level_property(property : String, value : Variant) -> void:
 	)
 	history.add_undo_property(editor.level, property, original)
 	history.add_undo_method(func() -> void:
-		action_made.emit("Property %s reverted")
+		action_made.emit("Property %s reverted" % property)
 	)
 	
 	# Commit
 	history.commit_action()
+
+func action_update_lut_color(ind : int, color : Color) -> void:
+	history.create_action("Change palette LUT color")
+	
+	# Redo/Undo
+	var original := editor.level.palette.color[ind] as Color
+	var action : ActionLUTColor = ActionLUTColor.new(ind, original, color)
+	history.add_do_method(func() -> void:
+		editor.level.palette.color[action.ind] = action.new
+		action_made.emit("Color %d updated to %s" % [action.ind, action.new.to_html(false)])
+	)
+	history.add_undo_method(func() -> void:
+		editor.level.palette.color[action.ind] = action.original
+		action_made.emit("Color %d reverted to %s" % [action.ind, action.original.to_html(false)])
+	)
+	history.add_do_reference(action)
+	history.add_undo_reference(action)
+	
+	# Commit action
+	history.commit_action()
+
+class ActionLUTColor extends Node:
+	var ind : int
+	var original : Color
+	var new : Color
+	func _init(i : int, o : Color, n : Color) -> void:
+		self.ind = i
+		self.original = o
+		self.new = n
+
+func action_update_palette(palette : Palette) -> void:
+	history.create_action("Change palette file")
+	
+	# Redo/Undo
+	var original := editor.level.palette as Palette
+	var action : ActionPalette = ActionPalette.new(original, palette)
+	history.add_do_method(func() -> void:
+		editor.level.palette = action.new
+		action_made.emit("Palette file changed.")
+	)
+	history.add_undo_method(func() -> void:
+		editor.level.palette = action.original
+		action_made.emit("Palette reverted to previous.")
+	)
+	history.add_do_reference(action)
+	history.add_undo_reference(action)
+	
+	# Commit action
+	history.commit_action()
+
+class ActionPalette extends Node:
+	var original : Palette
+	var new : Palette
+	func _init(o : Palette, n : Palette) -> void:
+		self.original = o
+		self.new = n

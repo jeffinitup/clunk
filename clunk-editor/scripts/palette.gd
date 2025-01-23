@@ -6,7 +6,7 @@ const SIZE = 16
 ## File extension
 const EXT = ".mpal"
 ## File identifier (header)
-const HEADER = [112, 97, 108, 101, 116, 116, 101]
+const HEADER = [112, 97, 108, 101, 116, 116, 101, 0]
 
 var color : PackedColorArray = PackedColorArray() :
 	set(value) :
@@ -22,9 +22,15 @@ var color : PackedColorArray = PackedColorArray() :
 		# Set value
 		color = value
 
-func _init(c_a : PackedColorArray) -> void:
-	self.color = c_a
+func _init(override : Variant) -> void:
+	if override is PackedColorArray:
+		self.color = override
 	
+	if override is String:
+		self.deserialize(override)
+	
+	if override is Palette:
+		self.color = override.color
 
 func serialize(path : String) -> void:
 	var file := FileAccess.open(path, FileAccess.WRITE)
@@ -34,8 +40,8 @@ func serialize(path : String) -> void:
 	file.store_buffer(buf)
 	
 	# Store color
-	buf = color.to_byte_array()
-	file.store_buffer(buf)
+	for col in color:
+		file.store_32(col.to_rgba32())
 	
 	# End serialization
 	file.close()
@@ -56,6 +62,9 @@ func deserialize(path : String) -> void:
 		file.close()
 		return
 	
-	file.get_buffer(file.get_length() - HEADER.size())
-	
-	
+	var new_color := PackedColorArray()
+	while file.get_position() < file.get_length():
+		var int_col := file.get_32()
+		new_color.append(Color.hex(int_col))
+	self.color = new_color
+	file.close()

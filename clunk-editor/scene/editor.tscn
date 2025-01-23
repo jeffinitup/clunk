@@ -130,6 +130,7 @@ theme = ExtResource("5_jei32")
 
 [node name="text" type="RichTextLabel" parent="interface/gui/vsort/console"]
 layout_mode = 2
+scroll_following = true
 
 [node name="tool_manager" type="Node" parent="interface"]
 script = ExtResource("5_g05hf")

@@ -12,6 +12,16 @@ exclusive = true
 unresizable = true
 script = ExtResource("1_4jweu")
 
+[node name="color" type="ColorPickerButton" parent="."]
+visible = false
+custom_minimum_size = Vector2(32, 32)
+offset_left = 187.0
+offset_top = 64.0
+offset_right = 219.0
+offset_bottom = 96.0
+theme = ExtResource("1_ha6oo")
+edit_alpha = false
+
 [node name="margin" type="MarginContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
@@ -38,102 +48,6 @@ theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 columns = 8
 
-[node name="ColorPickerButton" type="ColorPickerButton" parent="margin/sort/center/grid"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-theme = ExtResource("1_ha6oo")
-edit_alpha = false
-
-[node name="ColorPickerButton2" type="ColorPickerButton" parent="margin/sort/center/grid"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-theme = ExtResource("1_ha6oo")
-edit_alpha = false
-
-[node name="ColorPickerButton3" type="ColorPickerButton" parent="margin/sort/center/grid"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-theme = ExtResource("1_ha6oo")
-edit_alpha = false
-
-[node name="ColorPickerButton4" type="ColorPickerButton" parent="margin/sort/center/grid"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-theme = ExtResource("1_ha6oo")
-edit_alpha = false
-
-[node name="ColorPickerButton5" type="ColorPickerButton" parent="margin/sort/center/grid"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-theme = ExtResource("1_ha6oo")
-edit_alpha = false
-
-[node name="ColorPickerButton6" type="ColorPickerButton" parent="margin/sort/center/grid"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-theme = ExtResource("1_ha6oo")
-edit_alpha = false
-
-[node name="ColorPickerButton7" type="ColorPickerButton" parent="margin/sort/center/grid"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-theme = ExtResource("1_ha6oo")
-edit_alpha = false
-
-[node name="ColorPickerButton8" type="ColorPickerButton" parent="margin/sort/center/grid"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-theme = ExtResource("1_ha6oo")
-edit_alpha = false
-
-[node name="ColorPickerButton9" type="ColorPickerButton" parent="margin/sort/center/grid"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-theme = ExtResource("1_ha6oo")
-edit_alpha = false
-
-[node name="ColorPickerButton10" type="ColorPickerButton" parent="margin/sort/center/grid"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-theme = ExtResource("1_ha6oo")
-edit_alpha = false
-
-[node name="ColorPickerButton11" type="ColorPickerButton" parent="margin/sort/center/grid"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-theme = ExtResource("1_ha6oo")
-edit_alpha = false
-
-[node name="ColorPickerButton12" type="ColorPickerButton" parent="margin/sort/center/grid"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-theme = ExtResource("1_ha6oo")
-edit_alpha = false
-
-[node name="ColorPickerButton13" type="ColorPickerButton" parent="margin/sort/center/grid"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-theme = ExtResource("1_ha6oo")
-edit_alpha = false
-
-[node name="ColorPickerButton14" type="ColorPickerButton" parent="margin/sort/center/grid"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-theme = ExtResource("1_ha6oo")
-edit_alpha = false
-
-[node name="ColorPickerButton15" type="ColorPickerButton" parent="margin/sort/center/grid"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-theme = ExtResource("1_ha6oo")
-edit_alpha = false
-
-[node name="ColorPickerButton16" type="ColorPickerButton" parent="margin/sort/center/grid"]
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-theme = ExtResource("1_ha6oo")
-edit_alpha = false
-
 [node name="save_load" type="HBoxContainer" parent="margin/sort"]
 layout_mode = 2
 size_flags_vertical = 10
@@ -154,3 +68,8 @@ text = "Load .mpal"
 layout_mode = 2
 size_flags_vertical = 10
 text = "OK"
+
+[connection signal="close_requested" from="." to="." method="close_requested"]
+[connection signal="pressed" from="margin/sort/save_load/save" to="." method="save_mpal"]
+[connection signal="pressed" from="margin/sort/save_load/load" to="." method="load_mpal"]
+[connection signal="pressed" from="margin/sort/ok" to="." method="close_requested"]

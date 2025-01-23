@@ -2,7 +2,7 @@
 class_name Interface extends CanvasLayer
 
 ## Lines to print
-const CONSOLE_HISTORY = 8
+const CONSOLE_HISTORY = 20
 
 ## Level properties window
 @onready var level_properties_window := preload("res://scene/level_properties.tscn")
@@ -87,11 +87,16 @@ func edit_option_pressed(id: int) -> void:
 		5: 
 			var window : WindowLevelProperties = level_properties_window.instantiate()
 			window.field_changed.connect(editor.action_manager.action_update_level_property.bind())
+			window.palette_menu_opened.connect(palette_menu_setup.bind())
 			window.level = editor.level
 			add_child(window)
 			window.show()
 		_:
 			pass
+
+func palette_menu_setup(menu : WindowPalettePicker) -> void:
+	menu.palette_color_changed.connect(editor.action_manager.action_update_lut_color.bind())
+	menu.palette_loaded.connect(editor.action_manager.action_update_palette.bind())
 
 func file_selected(path : String) -> void:
 	editor.level = Level.new(path)

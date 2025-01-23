@@ -15,14 +15,14 @@ var level_author := ""
 ## Collection of polygons
 var polygons : Array[Editor.Polygon]
 ## Color palette (LUT)
-var palette : Palette = Palette.new([
+var palette : Palette = Palette.new(PackedColorArray([
 	Color.WHITE,
 	Color.LIGHT_GRAY,
 	Color.GRAY,
 	Color.DARK_GRAY,
 	Color.DIM_GRAY,
 	Color.BLACK
-])
+]))
 
 func _init(path : String = "") -> void:
 	if path != "":
@@ -74,7 +74,7 @@ func deserialize(target_path : String) -> void:
 	# Load metadata
 	level_name = data.level_name
 	level_author = data.level_author
-	palette = Palette.new(data.color)
+	palette = Palette.new(data.palette)
 	
 	# Load polygons
 	var keys = data.polygons.keys()
