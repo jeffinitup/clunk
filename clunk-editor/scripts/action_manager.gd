@@ -3,8 +3,6 @@ class_name ActionManager extends Node
 
 ## Fired when any action is modified (undone, redone)
 signal action_modified()
-## Fired when action is made
-signal action_made(descriptor : String)
 
 ## Depth of history to keep track of
 const DEPTH = 50
@@ -40,12 +38,12 @@ func action_move_poly(poly : Editor.Polygon, action : Tool.Select.SelectAction) 
 	
 	history.add_do_property(poly, &"points", poly.points)
 	history.add_do_method(func() -> void:
-		action_made.emit("Polygon %d moved to new position" % action.rid)
+		Logger.log_history("Polygon %d moved to new position" % action.rid)
 	)
 
 	history.add_undo_property(poly, &"points", action.original)
 	history.add_undo_method(func() -> void:
-		action_made.emit("Polygon %d moved to old position" % action.rid)
+		Logger.log_history("Polygon %d moved to old position" % action.rid)
 	)
 	history.add_undo_reference(action)
 	
@@ -61,13 +59,13 @@ func action_make_poly(poly : Editor.Polygon) -> void:
 	history.add_do_method(func() -> void:
 		var hist_poly := data_ref.pop_back() as Editor.Polygon
 		owner.level.polygons.append(hist_poly)
-		action_made.emit("Polygon %d added to scene" % hist_poly.rid)
+		Logger.log_history("Polygon %d added to scene" % hist_poly.rid)
 		owner.polys_updated.emit(owner.level.polygons)
 	)
 	history.add_undo_method(func() -> void:
 		var hist_poly := owner.level.polygons.pop_back() as Editor.Polygon
 		data_ref.push_back(hist_poly)
-		action_made.emit("Polygon %d removed from scene" % hist_poly.rid)
+		Logger.log_history("Polygon %d removed from scene" % hist_poly.rid)
 		owner.polys_updated.emit(owner.level.polygons)
 	)
 	
@@ -81,11 +79,11 @@ func action_update_level_property(property : String, value : Variant) -> void:
 	var original = editor.level.get(property)
 	history.add_do_property(editor.level, property, value)
 	history.add_do_method(func() -> void:
-		action_made.emit("Property %s changed to %s" % [property, value])
+		Logger.log_history("Property %s changed to %s" % [property, value])
 	)
 	history.add_undo_property(editor.level, property, original)
 	history.add_undo_method(func() -> void:
-		action_made.emit("Property %s reverted" % property)
+		Logger.log_history("Property %s reverted" % property)
 	)
 	
 	# Commit
@@ -99,11 +97,11 @@ func action_update_lut_color(ind : int, color : Color) -> void:
 	var action : ActionLUTColor = ActionLUTColor.new(ind, original, color)
 	history.add_do_method(func() -> void:
 		editor.level.palette.color[action.ind] = action.new
-		action_made.emit("Color %d updated to %s" % [action.ind, action.new.to_html(false)])
+		Logger.log_history("Color %d updated to %s" % [action.ind, action.new.to_html(false)])
 	)
 	history.add_undo_method(func() -> void:
 		editor.level.palette.color[action.ind] = action.original
-		action_made.emit("Color %d reverted to %s" % [action.ind, action.original.to_html(false)])
+		Logger.log_history("Color %d reverted to %s" % [action.ind, action.original.to_html(false)])
 	)
 	history.add_do_reference(action)
 	history.add_undo_reference(action)
@@ -128,11 +126,11 @@ func action_update_palette(palette : Palette) -> void:
 	var action : ActionPalette = ActionPalette.new(original, palette)
 	history.add_do_method(func() -> void:
 		editor.level.palette = action.new
-		action_made.emit("Palette file changed.")
+		Logger.log_history("Palette file changed.")
 	)
 	history.add_undo_method(func() -> void:
 		editor.level.palette = action.original
-		action_made.emit("Palette reverted to previous.")
+		Logger.log_history("Palette reverted to previous.")
 	)
 	history.add_do_reference(action)
 	history.add_undo_reference(action)

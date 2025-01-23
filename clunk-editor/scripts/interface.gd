@@ -23,13 +23,15 @@ const CONSOLE_HISTORY = 20
 func _ready() -> void:
 	# Print identifier to console
 	var version := ProjectSettings.get_setting("application/config/version") as String
-	print_to_console("CLUNK Editor Initialized - Version %s" % version)
+	Logger.message_logged.connect(print_to_console.bind())
+	Logger.log_default("CLUNK Editor Initialized - Version %s" % version)
 	
 	# Make sure vertex mode is selected
 	tools_list.select(1)
 
 func on_level_load() -> void:
 	console.text = ""
+	Logger.log_default("Level loaded - %s" % editor.level.level_name)
 	
 func show_hide() -> void:
 	main_panel.visible = not main_panel.visible
