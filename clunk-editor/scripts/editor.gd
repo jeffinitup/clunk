@@ -21,9 +21,11 @@ func set_poly_cur(poly : Polygon) -> void:
 
 class Polygon extends Resource:
 	var rid : int
-	var focused : bool = false
 	var origin := Vector2()
-	var points := PackedVector2Array()
+	var points := PackedVector2Array() :
+		set(value) : 
+			points = value
+			self.calculate_centroid()
 	var color := 0
 	
 	func _init(id : int):
@@ -31,15 +33,41 @@ class Polygon extends Resource:
 	
 	func append(point : Vector2) -> Polygon:
 		self.points.append(point)
+		self.calculate_centroid()
+		return self
+	
+	func insert(ind : int, point : Vector2) -> Polygon:
+		self.points.insert(ind, point)
+		self.calculate_centroid()
+		return self
+	
+	func remove(ind : int) -> Polygon:
+		self.points.remove_at(ind)
+		self.calculate_centroid()
 		return self
 	
 	## Calculates area using Gauss' shoelace formula
 	func calculate_area() -> float:
 		var result : float = 0.0
-		var size : int = points.size()
+		var size : int = self.points.size()
 		
 		for i in range(size):
 			var v := (i - 1 + size) % size
-			result += points[i].cross(points[v])
+			result += self.points[i].cross(points[v])
 		
 		return result * 0.5
+	
+	## Calculates centroid using area
+	func calculate_centroid() -> void:
+		var centroid := Vector2()
+		var area := calculate_area()
+		var size := self.points.size()
+		var factor := 0.0
+		
+		for i in range(size):
+			var v := (i - 1 + size) % size
+			factor = self.points[i] .cross(self.points[v])
+			centroid += (self.points[i] + self.points[v]) * factor
+		
+		centroid /= (6.0 * area)
+		self.origin = centroid

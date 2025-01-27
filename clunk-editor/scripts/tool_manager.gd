@@ -10,7 +10,11 @@ enum {
 
 ## Active tool
 var current : Tool = null
+## Element tools can draw to
+@onready var canvas : Control = $canvas
 
+func _physics_process(delta: float) -> void:
+	canvas.queue_redraw()
 
 func create_tool(i : int) -> Tool:
 	var tool : Tool
@@ -21,10 +25,6 @@ func create_tool(i : int) -> Tool:
 			tool = Tool.Select.new()
 		Vertex:
 			tool = Tool.Vertex.new()
-			
-			tool.poly_size = editor.level.polygons.size()
-			tool.temp_commit.connect(editor.set_poly_cur.bind())
-			editor.polys_updated.connect(tool.update_size.bind())
 		Polygon:
 			tool = Tool.Polygon.new()
 		Spline:
@@ -32,9 +32,13 @@ func create_tool(i : int) -> Tool:
 	tool.name = tool.tool_name.to_lower()
 	tool.action_manager = editor.action_manager
 	tool.editor = editor
+	tool.canvas = canvas
+	
+	canvas.draw.connect(tool._draw_tool.bind())
 	editor.action_manager.action_modified.connect(tool._undo_redo.bind())
 	
 	if current != null:
+		canvas.draw.disconnect(current._draw_tool.bind())
 		current.queue_free()
 	current = tool
 	add_child(tool)

@@ -33,6 +33,70 @@ func on_level_loaded() -> void:
 	history.clear_history()
 	data_ref.clear()
 
+func action_create_point(action : Tool.Polygon.ActionModifyPoint) -> void:
+	history.create_action("Create polygon point")
+	
+	history.add_do_method(func() -> void:
+		action.poly.insert(action.ind, action.new)
+		Logger.log_history("Inserted new point on polygon")
+	)
+	history.add_undo_method(func() -> void:
+		action.poly.remove(action.ind)
+		Logger.log_history("Removed point on polygon")
+	)
+	history.add_do_reference(action)
+	history.add_undo_reference(action)
+	
+	history.commit_action()
+
+func action_delete_point(action : Tool.Polygon.ActionModifyPoint) -> void:
+	history.create_action("Delete polygon point")
+	
+	history.add_do_method(func() -> void:
+		action.poly.remove(action.ind)
+		Logger.log_history("Removed point on polygon")
+	)
+	history.add_undo_method(func() -> void:
+		action.poly.insert(action.ind, action.new)
+		Logger.log_history("Inserted new point on polygon")
+	)
+	history.add_do_reference(action)
+	history.add_undo_reference(action)
+	
+	history.commit_action()
+
+func action_delete_poly(action : Tool.Polygon.ActionDeletePolygon) -> void:
+	history.create_action("Delete polygon")
+	
+	history.add_do_method(func() -> void:
+		editor.level.polygons.remove_at(action.poly.rid)
+		Logger.log_history("Destructive operation on polygon %d, removed from scene" % action.poly.rid)
+	)
+	history.add_undo_method(func() -> void:
+		editor.level.polygons.insert(action.poly.rid, action.poly)
+		Logger.log_history("Restored polygon %d before destructive operation" % action.poly.rid)
+	)
+	history.add_do_reference(action)
+	history.add_undo_reference(action)
+	
+	history.commit_action()
+
+func action_move_point(action : Tool.Polygon.ActionModifyPoint) -> void:
+	history.create_action("Move polygon point")
+	
+	history.add_do_method(func() -> void:
+		action.poly.points[action.ind] = action.new
+		Logger.log_history("Moved polygon point to %d x %d y" % [action.new.x, action.new.y])
+	)
+	history.add_undo_method(func() -> void:
+		action.poly.points[action.ind] = action.original
+		Logger.log_history("Reverted polygon point to %d x %d y" % [action.original.x, action.original.y])
+	)
+	history.add_do_reference(action)
+	history.add_undo_reference(action)
+	
+	history.commit_action()
+
 func action_move_poly(poly : Editor.Polygon, action : Tool.Select.SelectAction) -> void:
 	history.create_action("Polygon moved")
 	

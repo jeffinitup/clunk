@@ -16,7 +16,7 @@ const CONSOLE_HISTORY = 20
 ## Tabs list
 @onready var tabs : MenuBar = $gui/vsort/main/tabs
 ## Tool manager
-@onready var tool_manager : ToolManager = $tool_manager
+@onready var tool_manager : ToolManager = %tool_manager
 ## Console node
 @onready var console : RichTextLabel = $gui/vsort/console/text
 

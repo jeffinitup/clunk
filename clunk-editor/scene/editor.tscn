@@ -20,6 +20,19 @@ script = ExtResource("2_762bk")
 [node name="cell_manager" type="Node2D" parent="."]
 script = ExtResource("3_h0f4w")
 
+[node name="tool_manager" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("5_g05hf")
+
+[node name="canvas" type="Control" parent="tool_manager"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
 [node name="interface" type="CanvasLayer" parent="."]
 script = ExtResource("4_evutu")
 
@@ -133,12 +146,9 @@ layout_mode = 2
 bbcode_enabled = true
 scroll_following = true
 
-[node name="tool_manager" type="Node" parent="interface"]
-script = ExtResource("5_g05hf")
-
 [connection signal="level_loaded" from="." to="action_manager" method="on_level_loaded"]
 [connection signal="level_loaded" from="." to="interface" method="on_level_load"]
 [connection signal="id_pressed" from="interface/gui/vsort/main/tabs/File" to="interface" method="file_option_pressed"]
 [connection signal="id_pressed" from="interface/gui/vsort/main/tabs/Edit" to="interface" method="edit_option_pressed"]
 [connection signal="pressed" from="interface/gui/vsort/main/showhide" to="interface" method="show_hide"]
-[connection signal="item_selected" from="interface/gui/vsort/main/panel/sort/tools" to="interface/tool_manager" method="create_tool"]
+[connection signal="item_selected" from="interface/gui/vsort/main/panel/sort/tools" to="tool_manager" method="create_tool"]
