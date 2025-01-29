@@ -12,17 +12,10 @@ func _draw() -> void:
 			continue
 		draw_colored_polygon(polygon.points, editor.level.palette.color[polygon.color])
 		draw_circle(polygon.origin, 4.0, Color.RED, false)
-		
-		# Draw additional border if polygon is hovered over
-		#if polygon.selected:
-			#var lines := PackedVector2Array(polygon.points)
-			#lines.append(lines[0])
-			#draw_polyline(lines, Color.RED, 2.0)
-		#
-		#elif polygon.focused:
-			#var lines := PackedVector2Array(polygon.points)
-			#lines.append(lines[0])
-			#draw_polyline(lines, Color(Color.RED, fac), 2.0)
+	
+	# Draw existing actors
+	for actor in editor.level.actors:
+		actor._draw_actor(self)
 
 func _physics_process(delta : float) -> void:
 	# Redraw

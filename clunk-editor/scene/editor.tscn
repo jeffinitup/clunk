@@ -119,11 +119,12 @@ layout_mode = 2
 size_flags_vertical = 0
 allow_search = false
 auto_height = true
-item_count = 4
+item_count = 5
 item_0/text = "Select"
 item_1/text = "Vertex"
 item_2/text = "Polygon"
-item_3/text = "Spline"
+item_3/text = "Stamper"
+item_4/text = "Spline"
 
 [node name="header2" type="Label" parent="interface/gui/vsort/main/panel/sort"]
 layout_mode = 2

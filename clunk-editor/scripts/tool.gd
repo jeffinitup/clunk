@@ -330,6 +330,65 @@ class Polygon extends Tool:
 		var poly : Editor.Polygon
 		func _init(p : Editor.Polygon) -> void:
 			self.poly = p
+
+class Stamper extends Tool:
+	## Stamp menu
+	@onready var _stamp_menu := preload("res://scene/stamper_picker.tscn")
+	## Thing to stamp
+	var stamp : Variant :
+		set(value) : stamp = is_stamp(value)
+	
+	func _init() -> void:
+		self.tool_name = "Stamper"
+	
+	func _draw_tool() -> void:
+		# Color
+		var time := Time.get_ticks_usec() / 1000000.0
+		var fac := 0.5 + (sin(time * 2) * 0.25)
+		
+		if stamp is ActorBase:
+			draw_actor(fac)
+		elif stamp is Editor.Polygon:
+			draw_poly(fac)
+	
+	func _unhandled_input(event: InputEvent) -> void:
+		if event is InputEventMouseButton:
+			# Handle left click
+			if event.button_index == MOUSE_BUTTON_LEFT:
+				if event.is_pressed():
+					# If no stamp, open stamp menu
+					if !stamp:
+						open_stamp_menu()
+					
+					# Otherwise, stamp thing
+					pass
+				
+			# Handle right click
+			if event.button_index == MOUSE_BUTTON_RIGHT:
+				if event.is_pressed():
+					pass
+	
+	func open_stamp_menu() -> void:
+		# Create stamp menu
+		var menu := _stamp_menu.instantiate() as WindowStamperPicker
+		add_child(menu)
+		menu.stamp_picked.connect(func(thing : Variant) -> void: stamp = thing)
+	
+	func is_stamp(thing : Variant) -> Variant:
+		if thing is ActorBase || thing is Editor.Polygon:
+			return thing
+		return null
+	
+	func draw_actor(fac : float) -> void:
+		var pos := get_global_mouse_position() as Vector2
+		
+		stamp = stamp as ActorBase
+		canvas.draw_rect(Rect2(stamp.rect.position + pos, stamp.rect.size), Color(Color.RED, fac))
+		canvas.draw_string(editor.font, pos + stamp.rect.position + stamp.rect.size, stamp._ANAME)
+	
+	func draw_poly(fac : float) -> void:
+		stamp = stamp as Editor.Polygon
+		canvas.draw_polygon_colored(stamp.points, Color(Color.RED, fac))
 	
 class Spline extends Tool:
 	func _init() -> void:

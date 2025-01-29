@@ -5,6 +5,7 @@ enum {
 	Select,
 	Vertex,
 	Polygon,
+	Stamper,
 	Spline
 }
 
@@ -27,8 +28,11 @@ func create_tool(i : int) -> Tool:
 			tool = Tool.Vertex.new()
 		Polygon:
 			tool = Tool.Polygon.new()
+		Stamper:
+			tool = Tool.Stamper.new()
 		Spline:
 			tool = Tool.Spline.new()
+	
 	tool.name = tool.tool_name.to_lower()
 	tool.action_manager = editor.action_manager
 	tool.editor = editor

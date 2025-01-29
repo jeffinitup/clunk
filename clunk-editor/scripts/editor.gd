@@ -10,8 +10,12 @@ signal level_loaded()
 @onready var action_manager := $action_manager as ActionManager
 ## Current level
 @onready var level : Level = Level.new()
+## Editor font
+static var font : Font = preload("uid://b6gqlupalgea3")
+
 ## Current, uncommited polygon
 var poly_cur : Polygon
+
 
 func _ready() -> void:
 	pass
