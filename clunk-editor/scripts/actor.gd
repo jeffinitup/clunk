@@ -11,8 +11,10 @@ var rect : Rect2
 var position : Vector2
 
 func _draw_actor(canvas : Node2D) -> void:
+	canvas.draw_set_transform(position)
 	canvas.draw_rect(rect, Color.RED, false, 2.0)
-	canvas.draw_string(Editor.font, self.position, _ANAME)
+	canvas.draw_string(Editor.font, rect.end, _ANAME)
+	canvas.draw_set_transform(Vector2.ZERO)
 
 func _serialize() -> Dictionary:
 	return {

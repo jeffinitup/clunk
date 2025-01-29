@@ -136,6 +136,27 @@ func action_make_poly(poly : Editor.Polygon) -> void:
 	# Commit
 	history.commit_action()
 
+func action_stamp(action : Tool.Stamper.ActionStamp) -> void:
+	history.create_action("Stamp thing")
+	var thing : Variant = action.thing
+	
+	if thing is ActorBase:
+		thing.rid = editor.level.actors.size()
+		thing.position = action.mouse_pos
+		
+		history.add_do_method(func() -> void:
+			editor.level.actors.append(thing)
+			Logger.log_history("Stamped %s into scene" % thing._ANAME.to_lower())
+		)
+		history.add_undo_method(func() -> void:
+			editor.level.actors.remove_at(thing.rid)
+			Logger.log_history("Removed %s from scene" % thing._ANAME.to_lower())
+		)
+	
+	history.add_do_reference(thing)
+	history.add_undo_reference(thing)
+	history.commit_action()
+
 func action_update_level_property(property : String, value : Variant) -> void:
 	history.create_action("Change level property")
 	

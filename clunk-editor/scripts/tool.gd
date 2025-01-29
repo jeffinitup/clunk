@@ -359,9 +359,14 @@ class Stamper extends Tool:
 					# If no stamp, open stamp menu
 					if !stamp:
 						open_stamp_menu()
+						return
 					
 					# Otherwise, stamp thing
-					pass
+					var action := ActionStamp.new(
+						stamp.duplicate(),
+						get_global_mouse_position()
+					)
+					action_manager.action_stamp(action)
 				
 			# Handle right click
 			if event.button_index == MOUSE_BUTTON_RIGHT:
@@ -389,6 +394,13 @@ class Stamper extends Tool:
 	func draw_poly(fac : float) -> void:
 		stamp = stamp as Editor.Polygon
 		canvas.draw_polygon_colored(stamp.points, Color(Color.RED, fac))
+	
+	class ActionStamp extends Node:
+		var thing : Variant
+		var mouse_pos : Vector2
+		func _init(t : Variant, mp : Vector2) -> void:
+			self.thing = t
+			self.mouse_pos = mp
 	
 class Spline extends Tool:
 	func _init() -> void:
