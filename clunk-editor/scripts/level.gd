@@ -101,9 +101,16 @@ func deserialize(target_path : String) -> void:
 
 ## Deserializes an actor based on data
 func deserialize_actor(clazz : String, data : Dictionary) -> ActorBase:
-	var actor = ClassDB.instantiate(clazz)
+	var actor = actor_class_from_name(clazz)
 	actor._deserialize(data)
 	return actor
+
+func actor_class_from_name(clazz : String) -> ActorBase:
+	var dicts = ProjectSettings.get_global_class_list() as Array[Dictionary]
+	for dict in dicts:
+		if dict["class"] == clazz:
+			return load(dict["path"]).new()
+	return null
 
 ## Updates color LUT
 func update_color_lut(lut : PackedColorArray) -> void:

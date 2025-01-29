@@ -371,7 +371,11 @@ class Stamper extends Tool:
 			# Handle right click
 			if event.button_index == MOUSE_BUTTON_RIGHT:
 				if event.is_pressed():
-					pass
+					if stamp:
+						stamp = null
+						return
+					
+					open_stamp_menu()
 	
 	func open_stamp_menu() -> void:
 		# Create stamp menu

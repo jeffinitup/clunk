@@ -17,9 +17,11 @@ func _draw_actor(canvas : Node2D) -> void:
 	canvas.draw_set_transform(Vector2.ZERO)
 
 func _serialize() -> Dictionary:
+	var script := get_script() as Script
+	
 	return {
 		rid : {
-			"class" : get_class(),
+			"class" : script.get_global_name(),
 			"position" : position,
 			"args" : [],
 			"signals" : []
