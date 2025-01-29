@@ -81,6 +81,27 @@ func action_delete_poly(action : Tool.Polygon.ActionDeletePolygon) -> void:
 	
 	history.commit_action()
 
+func action_move_thing(action : Tool.Select.ActionMoveThing) -> void:
+	history.create_action("Move actor")
+	
+	if action.thing is Editor.Polygon:
+		history.add_do_property(action.thing, &"points", action.thing.points)
+		history.add_do_method(Logger.log_history.bind("Polygon %d moved to new position" % action.thing.rid))
+		
+		history.add_undo_property(action.thing, &"points", action.original)
+		history.add_undo_method(Logger.log_history.bind("Polygon %d moved to old position" % action.thing.rid))
+		
+	elif action.thing is ActorBase:
+		history.add_do_property(action.thing, &"position", action.thing.position)
+		history.add_do_method(Logger.log_history.bind("Actor %s moved to new position" % action.thing._ANAME.to_lower()))
+		
+		history.add_undo_property(action.thing, &"position", action.original)
+		history.add_undo_method(Logger.log_history.bind("Actor %s moved to old position" % action.thing._ANAME.to_lower()))
+	
+	history.add_do_reference(action)
+	history.add_undo_reference(action)
+	history.commit_action()
+
 func action_move_point(action : Tool.Polygon.ActionModifyPoint) -> void:
 	history.create_action("Move polygon point")
 	
@@ -97,21 +118,13 @@ func action_move_point(action : Tool.Polygon.ActionModifyPoint) -> void:
 	
 	history.commit_action()
 
-func action_move_poly(poly : Editor.Polygon, action : Tool.Select.SelectAction) -> void:
-	history.create_action("Polygon moved")
-	
-	history.add_do_property(poly, &"points", poly.points)
-	history.add_do_method(func() -> void:
-		Logger.log_history("Polygon %d moved to new position" % action.rid)
-	)
+#func action_move_poly(poly : Editor.Polygon, action : Tool.Select.SelectAction) -> void:
+	#history.create_action("Polygon moved")
+	#
 
-	history.add_undo_property(poly, &"points", action.original)
-	history.add_undo_method(func() -> void:
-		Logger.log_history("Polygon %d moved to old position" % action.rid)
-	)
-	history.add_undo_reference(action)
-	
-	history.commit_action()
+	#history.add_undo_reference(action)
+	#
+	#history.commit_action()
 
 func action_make_poly(poly : Editor.Polygon) -> void:
 	history.create_action("Add polygon to scene")

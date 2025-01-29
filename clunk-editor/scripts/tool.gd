@@ -20,12 +20,12 @@ func _undo_redo() -> void:
 
 class Select extends Tool:
 	## Hovered polygon
-	var hover_poly : Editor.Polygon
+	var hover_thing : Variant
 	## Currently selected polygon
-	var cur_poly : Editor.Polygon
+	var current_thing : Variant
 	
-	## Original collection of points
-	var original : PackedVector2Array
+	## Total movement
+	var total_movement : Vector2 = Vector2()
 	
 	func _init() -> void:
 		self.tool_name = "Select"
@@ -36,54 +36,90 @@ class Select extends Tool:
 		var fac := 0.5 + (sin(time * 2) * 0.25)
 		
 		# Draw selected
-		if hover_poly || cur_poly:
-			var points := PackedVector2Array(hover_poly.points if !cur_poly else cur_poly.points)
-			var color := Color(Color.RED, fac) if !cur_poly else Color.RED 
-			points.push_back(hover_poly.points[0] if !cur_poly else cur_poly.points[0])
-			canvas.draw_polyline(points, color, 2.0 + fac)
+		if hover_thing || current_thing:
+			# Hover draw
+			if hover_thing is Editor.Polygon:
+				var points := PackedVector2Array(hover_thing.points)
+				var color := Color(Color.RED, fac) 
+				points.push_back(hover_thing.points[0])
+				canvas.draw_polyline(points, color, 2.0 + fac)
+			
+			if hover_thing is ActorBase:
+				canvas.draw_circle(hover_thing.position, 10.0, Color.RED, false, 1.0)
 	
 	func _unhandled_input(event : InputEvent) -> void:
 		if event is InputEventMouseMotion:
-			if cur_poly:
-				var movement := Transform2D(0, -event.relative)
-				var moved := cur_poly.points * movement
-				cur_poly.points = moved
+			if current_thing:
+				total_movement += -event.relative
+				
+				# Set polygon position
+				if current_thing is Editor.Polygon:
+					var movement := Transform2D(0, -event.relative)
+					var moved := current_thing.points * movement as PackedVector2Array
+					current_thing.points = moved
+				
+				# Set actor position
+				if current_thing is ActorBase:
+					var movement := Transform2D(0, -event.relative)
+					current_thing.position *= movement
 			
-			if !cur_poly:
-				var mpos := get_global_mouse_position()
-				for polygon in editor.level.polygons:
-					if Geometry2D.is_point_in_polygon(mpos, polygon.points):
-						hover_poly = polygon
-						break
-					hover_poly = null
-					
+			if !current_thing:
+				# Pick object
+				hover_thing = pick_object()
+			
 		if event is InputEventMouseButton:
-			if !event.pressed || event.button_index != MOUSE_BUTTON_LEFT:
-				if !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) && cur_poly:
-					var action := SelectAction.new(cur_poly.rid, self.original)
-					action_manager.action_move_poly(cur_poly, action)
-					
-					cur_poly = null
-					original = PackedVector2Array()
+			if !event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
+				var action : ActionMoveThing
+				if !current_thing:
+					return
+				
+				# Commit actor position
+				if current_thing is ActorBase:
+					action = ActionMoveThing.new(
+						current_thing,
+						current_thing.position - total_movement
+					)
+				
+				# Commit polygon position
+				elif current_thing is Editor.Polygon:
+					action = ActionMoveThing.new(
+						current_thing,
+						current_thing.points * Transform2D(0, -total_movement)
+					)
+				
+				action_manager.action_move_thing(action)
+				current_thing = null
+				total_movement = Vector2()
+				
 				return
 			
 			if event.is_pressed() && event.button_index == MOUSE_BUTTON_LEFT:
-				var mpos := get_global_mouse_position()
-				for polygon in editor.level.polygons:
-					if Geometry2D.is_point_in_polygon(mpos, polygon.points):
-						cur_poly = polygon
-						original = cur_poly.points
-						return
-				
-				cur_poly = null
-				original = PackedVector2Array()
+				# Pick object
+				current_thing = pick_object()
+				total_movement = Vector2()
 	
-	class SelectAction extends Node:
-		var rid : int 
-		var original : PackedVector2Array
+	func pick_object() -> Variant:
+		# Check for actors first
+		var mpos := get_global_mouse_position()
+		for actor in editor.level.actors:
+			var rect := actor.rect
+			rect = Rect2(actor.position + rect.position, rect.size)
+			if rect.has_point(mpos):
+				return actor
 		
-		func _init(i : int, o : PackedVector2Array) -> void:
-			self.rid = i
+		# Next check for polygon
+		for polygon in editor.level.polygons:
+			if Geometry2D.is_point_in_polygon(mpos, polygon.points):
+				return polygon
+		
+		return null
+	
+	class ActionMoveThing extends Node:
+		var thing : Variant
+		var original : Variant
+		
+		func _init(t : Variant, o : Variant) -> void:
+			self.thing = t
 			self.original = o
 	
 class Vertex extends Tool:
