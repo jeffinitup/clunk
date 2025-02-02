@@ -19,6 +19,8 @@ const CONSOLE_HISTORY = 20
 @onready var tool_manager : ToolManager = %tool_manager
 ## Console node
 @onready var console : RichTextLabel = $gui/vsort/console/text
+## Property container
+@onready var _properties : VBoxContainer = $gui/vsort/main/panel/sort/properties/container
 
 func _ready() -> void:
 	# Print identifier to console
@@ -95,6 +97,104 @@ func edit_option_pressed(id: int) -> void:
 			window.show()
 		_:
 			pass
+
+func fill_properties(thing : Variant) -> void:
+	# Check thing
+	if !thing:
+		clear_properties() 
+		return
+	
+	# Get property list
+	var script := thing.get_script() as Script
+	var properties := script.get_script_property_list() as Array[Dictionary]
+	print(JSON.stringify(properties, " "))
+	
+	# Iterate through properties
+	clear_properties()
+	for property in properties:
+		var entry := create_entry(thing, property)
+		if entry:
+			_properties.add_child(entry)
+	
+
+func clear_properties() -> void:
+	for child in _properties.get_children():
+		child.queue_free()
+
+func create_entry(t : Variant, property : Dictionary) -> HBoxContainer:
+	# Get information
+	var type := property.get("type", 0) as int
+	var usage := property.get("usage", 0) as int
+	var pname := property.get("name", "") as String
+	
+	# Verify
+	if usage != PROPERTY_USAGE_SCRIPT_VARIABLE:
+		return null
+	
+	# Create container
+	var c := HBoxContainer.new()
+	c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var n := Label.new()
+	n.text = pname.to_pascal_case()
+	c.add_child(n)
+	
+	# Create field
+	var field : Variant
+	match type:
+		TYPE_INT:		
+			field = create_entry_int(c)
+			field.value = t.get(pname)
+			field.value_changed.connect(%action_manager.action_update_property.bind(t, pname))
+		TYPE_FLOAT:		
+			field = create_entry_float(c)
+			field.value = t.get(pname)
+			field.value_changed.connect(%action_manager.action_update_property.bind(t, pname))
+		TYPE_STRING:	
+			field = create_entry_string(c)
+			field.value = t.get(pname)
+			field.text_changed.connect(%action_manager.action_update_property.bind(t, pname))
+		TYPE_COLOR:		
+			field = create_entry_color(c)
+			field.color = t.get(pname)
+			field.color_changed.connect(%action_manager.action_update_property.bind(t, pname))
+		_:
+			return null
+	
+	# Return entry
+	return c
+
+func create_entry_int(container : HBoxContainer) -> SpinBox:
+	var field := SpinBox.new()
+	
+	field.size_flags_horizontal = Control.SIZE_SHRINK_END | Control.SIZE_EXPAND
+	field.step = 1
+	
+	container.add_child(field)
+	return field
+
+func create_entry_float(container : HBoxContainer) -> SpinBox:
+	var field := SpinBox.new()
+	
+	field.size_flags_horizontal = Control.SIZE_SHRINK_END | Control.SIZE_EXPAND
+	
+	container.add_child(field)
+	return field
+
+func create_entry_string(container : HBoxContainer) -> LineEdit:
+	var field := LineEdit.new()
+	
+	field.size_flags_horizontal = Control.SIZE_SHRINK_END | Control.SIZE_EXPAND
+	
+	container.add_child(field)
+	return field
+
+func create_entry_color(container : HBoxContainer) -> ColorPickerButton:
+	var field := ColorPickerButton.new()
+	
+	field.size_flags_horizontal = Control.SIZE_SHRINK_END | Control.SIZE_EXPAND
+	
+	container.add_child(field)
+	return field
 
 func palette_menu_setup(menu : WindowPalettePicker) -> void:
 	menu.palette_color_changed.connect(editor.action_manager.action_update_lut_color.bind())

@@ -24,6 +24,7 @@ func create_tool(i : int) -> Tool:
 	match i:
 		Select:
 			tool = Tool.Select.new()
+			tool.thing_selected.connect(%interface.fill_properties.bind())
 		Vertex:
 			tool = Tool.Vertex.new()
 		Polygon:

@@ -187,6 +187,35 @@ func action_update_level_property(property : String, value : Variant) -> void:
 	# Commit
 	history.commit_action()
 
+func action_update_property(value : Variant, thing : Variant, property : String) -> void:
+	history.create_action("Set property")
+	var action := ActionProperty.new(thing, property, value, thing.get(property))
+
+	history.add_do_method(func() -> void:
+		action.thing.set(action.property, action.n_value)
+		Logger.log_history("%s set to %s" % [action.property, action.n_value])
+	)
+	history.add_undo_method(func() -> void:
+		action.thing.set(action.property, action.o_value)
+		Logger.log_history("%s reverted to %s" % [action.property, action.o_value])
+	)
+	
+	history.add_do_reference(action)
+	history.add_undo_reference(action)
+	
+	history.commit_action()
+
+class ActionProperty extends Node:
+	var thing : Variant
+	var property : String
+	var n_value : Variant
+	var o_value : Variant
+	func _init(t : Variant, p : String, n_v : Variant, o_v : Variant) -> void:
+		self.thing = t
+		self.property = p
+		self.n_value = n_v
+		self.o_value = o_v
+
 func action_update_lut_color(ind : int, color : Color) -> void:
 	history.create_action("Change palette LUT color")
 	

@@ -19,11 +19,13 @@ func _undo_redo() -> void:
 	pass
 
 class Select extends Tool:
+	## Fired when something is selected
+	signal thing_selected(thing : Variant)
+	
 	## Hovered polygon
 	var hover_thing : Variant
 	## Currently selected polygon
 	var current_thing : Variant
-	
 	## Total movement
 	var total_movement : Vector2 = Vector2()
 	
@@ -96,6 +98,7 @@ class Select extends Tool:
 			if event.is_pressed() && event.button_index == MOUSE_BUTTON_LEFT:
 				# Pick object
 				current_thing = pick_object()
+				thing_selected.emit(current_thing)
 				total_movement = Vector2()
 	
 	func pick_object() -> Variant:

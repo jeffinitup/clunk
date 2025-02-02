@@ -12,6 +12,7 @@
 script = ExtResource("1_ohh0g")
 
 [node name="action_manager" type="Node" parent="."]
+unique_name_in_owner = true
 script = ExtResource("2_klb3c")
 
 [node name="draw" type="Node2D" parent="."]
@@ -34,6 +35,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="interface" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
 script = ExtResource("4_evutu")
 
 [node name="gui" type="MarginContainer" parent="interface"]
