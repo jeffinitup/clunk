@@ -15,7 +15,7 @@ permissions:
 env:
   GODOT_VERSION: 4.3
   EXPORT_NAME: clunk
-  PROJECT_PATH: ./
+  PROJECT_PATH: ./clunk-editor/
 
 jobs:
   build:
