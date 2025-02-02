@@ -16,9 +16,5 @@ static var font : Font = preload("uid://b6gqlupalgea3")
 ## Current, uncommited polygon
 var poly_cur : Polygon
 
-
-func _ready() -> void:
-	pass
-
 func set_poly_cur(poly : Polygon) -> void:
 	poly_cur = poly

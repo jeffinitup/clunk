@@ -56,6 +56,11 @@ func file_option_pressed(id: int) -> void:
 	
 		# Load level
 		1:
+			if WebHelper.is_web():
+				WebHelper.loaded.connect(file_selected_web.bind(), CONNECT_ONE_SHOT)
+				WebHelper.open(".mlf")
+				return
+			
 			var diag := FileDialog.new()
 			diag.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 			diag.access = FileDialog.ACCESS_FILESYSTEM
@@ -65,6 +70,9 @@ func file_option_pressed(id: int) -> void:
 		
 		# Save level
 		2:
+			if WebHelper.is_web():
+				return
+			
 			if editor.level.path != "":
 				editor.level.serialize()
 				return
@@ -78,6 +86,9 @@ func file_option_pressed(id: int) -> void:
 		
 		# Save level as
 		3:
+			if WebHelper.is_web():
+				return
+			
 			var diag := FileDialog.new()
 			diag.file_mode = FileDialog.FILE_MODE_SAVE_FILE
 			diag.access = FileDialog.ACCESS_FILESYSTEM
@@ -202,6 +213,16 @@ func palette_menu_setup(menu : WindowPalettePicker) -> void:
 
 func file_selected(path : String) -> void:
 	editor.level = Level.new(path)
+	editor.level_loaded.emit()
+	
+func file_selected_web(_fn : String, _ft : String, data : String) -> void:
+	var level := Level.new()
+	var bdata := Marshalls.base64_to_raw(data) as PackedByteArray
+	var buf := StreamPeerBuffer.new()
+	buf.data_array = bdata
+	level.deserialize(buf)
+	
+	editor.level = level
 	editor.level_loaded.emit()
 
 func file_selected_save(path : String) -> void:

@@ -16,11 +16,13 @@ config/version="0.1"
 config/tags=PackedStringArray("tool")
 run/main_scene="res://scene/editor.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
+run/low_processor_mode=true
 config/icon="res://icon.svg"
 
 [autoload]
 
 Logger="*res://scripts/logger.gd"
+WebHelper="*res://scripts/web_helper.gd"
 
 [display]
 

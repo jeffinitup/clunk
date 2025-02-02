@@ -28,9 +28,9 @@ var actors : Array[ActorBase]
 ## Color palette (LUT)
 var palette : Palette = Palette.new(PackedColorArray(PAL_DEFAULT))
 
-func _init(path : String = "") -> void:
-	if path != "":
-		self.deserialize(path)
+func _init(arg : Variant = -1) -> void:
+	if arg != -1:
+		self.deserialize(arg)
 
 ## Writes data to binary JSON file
 func serialize() -> void:
@@ -58,21 +58,28 @@ func serialize() -> void:
 	file.close()
 
 ## Loads data from binary JSON file
-func deserialize(target_path : String) -> void:
-	if target_path.right(4) != EXT:
-		push_error("Level format invalid")
-		return
+func deserialize(arg : Variant) -> void:
+	var file : FileAccess
+	var data : Dictionary
 	
-	path = target_path
-	var file := FileAccess.open(target_path, FileAccess.READ)
+	if arg is String:
+		if arg.right(4) != EXT:
+			push_error("Level format invalid")
+			return
 	
-	if !file:
-		push_error("File does not exist")
-		return
+		path = arg
+		file = FileAccess.open(path, FileAccess.READ)
 	
-	# Load dictionary
-	var data : Dictionary = file.get_var()
-	file.close()
+		if !file:
+			push_error("File does not exist")
+			return
+		
+		# Load dictionary
+		data = file.get_var()
+		file.close()
+			
+	if arg is StreamPeerBuffer:
+		data = arg.get_var()
 	
 	if data.specification > SPEC:
 		push_error("Specification too new")
