@@ -67,6 +67,7 @@ size_flags_vertical = 0
 flat = true
 
 [node name="File" type="PopupMenu" parent="interface/gui/vsort/main/tabs"]
+unique_name_in_owner = true
 auto_translate_mode = 1
 size = Vector2i(102, 100)
 item_count = 4

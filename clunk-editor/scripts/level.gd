@@ -52,7 +52,14 @@ func serialize() -> void:
 	for actor in actors:
 		t_actors.merge(actor._serialize())
 	data.actors = t_actors
-		
+	
+	if WebHelper.is_web():
+		var buf := StreamPeerBuffer.new()
+		var name := level_name if level_name != "" else "Level"
+		buf.put_var(data)
+		WebHelper.save(buf.data_array, name + EXT)
+		return
+	
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_var(data)
 	file.close()

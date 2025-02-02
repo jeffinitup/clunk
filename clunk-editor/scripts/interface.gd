@@ -28,8 +28,9 @@ func _ready() -> void:
 	Logger.message_logged.connect(print_to_console.bind())
 	Logger.log_default("CLUNK Editor Initialized - Version %s" % version)
 	
-	# Make sure vertex mode is selected
-	tools_list.select(1)
+	# Handle web
+	if WebHelper.is_web():
+		%File.remove_item(3)
 
 func on_level_load() -> void:
 	console.text = ""
@@ -71,6 +72,7 @@ func file_option_pressed(id: int) -> void:
 		# Save level
 		2:
 			if WebHelper.is_web():
+				editor.level.serialize()
 				return
 			
 			if editor.level.path != "":
