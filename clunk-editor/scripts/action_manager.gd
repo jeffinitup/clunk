@@ -33,7 +33,7 @@ func on_level_loaded() -> void:
 	history.clear_history()
 	data_ref.clear()
 
-func action_create_point(action : Tool.Polygon.ActionModifyPoint) -> void:
+func action_create_point(action : Tool.Poly.ActionModifyPoint) -> void:
 	history.create_action("Create polygon point")
 	
 	history.add_do_method(func() -> void:
@@ -49,7 +49,7 @@ func action_create_point(action : Tool.Polygon.ActionModifyPoint) -> void:
 	
 	history.commit_action()
 
-func action_delete_point(action : Tool.Polygon.ActionModifyPoint) -> void:
+func action_delete_point(action : Tool.Poly.ActionModifyPoint) -> void:
 	history.create_action("Delete polygon point")
 	
 	history.add_do_method(func() -> void:
@@ -65,7 +65,7 @@ func action_delete_point(action : Tool.Polygon.ActionModifyPoint) -> void:
 	
 	history.commit_action()
 
-func action_delete_poly(action : Tool.Polygon.ActionDeletePolygon) -> void:
+func action_delete_poly(action : Tool.Poly.ActionDeletePolygon) -> void:
 	history.create_action("Delete polygon")
 	
 	history.add_do_method(func() -> void:
@@ -84,7 +84,7 @@ func action_delete_poly(action : Tool.Polygon.ActionDeletePolygon) -> void:
 func action_move_thing(action : Tool.Select.ActionMoveThing) -> void:
 	history.create_action("Move actor")
 	
-	if action.thing is Editor.Polygon:
+	if action.thing is Polygon:
 		history.add_do_property(action.thing, &"points", action.thing.points)
 		history.add_do_method(Logger.log_history.bind("Polygon %d moved to new position" % action.thing.rid))
 		
@@ -102,7 +102,7 @@ func action_move_thing(action : Tool.Select.ActionMoveThing) -> void:
 	history.add_undo_reference(action)
 	history.commit_action()
 
-func action_move_point(action : Tool.Polygon.ActionModifyPoint) -> void:
+func action_move_point(action : Tool.Poly.ActionModifyPoint) -> void:
 	history.create_action("Move polygon point")
 	
 	history.add_do_method(func() -> void:
@@ -118,7 +118,7 @@ func action_move_point(action : Tool.Polygon.ActionModifyPoint) -> void:
 	
 	history.commit_action()
 
-#func action_move_poly(poly : Editor.Polygon, action : Tool.Select.SelectAction) -> void:
+#func action_move_poly(poly : Polygon, action : Tool.Select.SelectAction) -> void:
 	#history.create_action("Polygon moved")
 	#
 
@@ -126,7 +126,7 @@ func action_move_point(action : Tool.Polygon.ActionModifyPoint) -> void:
 	#
 	#history.commit_action()
 
-func action_make_poly(poly : Editor.Polygon) -> void:
+func action_make_poly(poly : Polygon) -> void:
 	history.create_action("Add polygon to scene")
 		
 	# Add a data reference to stack
@@ -134,13 +134,13 @@ func action_make_poly(poly : Editor.Polygon) -> void:
 	
 	# Redo/Undo
 	history.add_do_method(func() -> void:
-		var hist_poly := data_ref.pop_back() as Editor.Polygon
+		var hist_poly := data_ref.pop_back() as Polygon
 		owner.level.polygons.append(hist_poly)
 		Logger.log_history("Polygon %d added to scene" % hist_poly.rid)
 		owner.polys_updated.emit(owner.level.polygons)
 	)
 	history.add_undo_method(func() -> void:
-		var hist_poly := owner.level.polygons.pop_back() as Editor.Polygon
+		var hist_poly := owner.level.polygons.pop_back() as Polygon
 		data_ref.push_back(hist_poly)
 		Logger.log_history("Polygon %d removed from scene" % hist_poly.rid)
 		owner.polys_updated.emit(owner.level.polygons)

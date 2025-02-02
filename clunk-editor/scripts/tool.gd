@@ -40,7 +40,7 @@ class Select extends Tool:
 		# Draw selected
 		if hover_thing || current_thing:
 			# Hover draw
-			if hover_thing is Editor.Polygon:
+			if hover_thing is Polygon:
 				var points := PackedVector2Array(hover_thing.points)
 				var color := Color(Color.RED, fac) 
 				points.push_back(hover_thing.points[0])
@@ -55,7 +55,7 @@ class Select extends Tool:
 				total_movement += -event.relative
 				
 				# Set polygon position
-				if current_thing is Editor.Polygon:
+				if current_thing is Polygon:
 					var movement := Transform2D(0, -event.relative)
 					var moved := current_thing.points * movement as PackedVector2Array
 					current_thing.points = moved
@@ -83,7 +83,7 @@ class Select extends Tool:
 					)
 				
 				# Commit polygon position
-				elif current_thing is Editor.Polygon:
+				elif current_thing is Polygon:
 					action = ActionMoveThing.new(
 						current_thing,
 						current_thing.points * Transform2D(0, -total_movement)
@@ -127,7 +127,7 @@ class Select extends Tool:
 	
 class Vertex extends Tool:
 	## Current, modified polygon
-	var cur_poly : Editor.Polygon
+	var cur_poly : Polygon
 	
 	func _init() -> void:
 		self.tool_name = "Vertex"
@@ -159,7 +159,7 @@ class Vertex extends Tool:
 				var pos : Vector2 = event.position
 				if !self.cur_poly:
 					var size := editor.level.polygons.size()
-					self.cur_poly = Editor.Polygon.new(size)
+					self.cur_poly = Polygon.new(size)
 				self.cur_poly.append(pos)
 				
 			## Commit polygon
@@ -195,20 +195,20 @@ class Vertex extends Tool:
 		add_to_polygon_list(self.cur_poly)
 		self.cur_poly = null
 	
-	func add_to_polygon_list(poly : Editor.Polygon) -> void:
+	func add_to_polygon_list(poly : Polygon) -> void:
 		action_manager.action_make_poly(poly)
 		cur_poly = null
 
-class Polygon extends Tool:
+class Poly extends Tool:
 	## Dist from cursor -> vertex needed to grab vertex
 	const DIST := 8.0
 	## Radius of vertex
 	const RADIUS := 3.0
 	
 	## Hovered polygon
-	var hover_poly : Editor.Polygon
+	var hover_poly : Polygon
 	## Selected polygon
-	var cur_poly : Editor.Polygon
+	var cur_poly : Polygon
 	## Selected vertex ind
 	var cur_ind : int = -1
 	## Selected side ind
@@ -355,19 +355,19 @@ class Polygon extends Tool:
 		return -1
 
 	class ActionModifyPoint extends Node:
-		var poly : Editor.Polygon
+		var poly : Polygon
 		var ind : int
 		var original : Vector2
 		var new : Vector2
-		func _init(p : Editor.Polygon, i : int, o : Vector2, n : Vector2) -> void:
+		func _init(p : Polygon, i : int, o : Vector2, n : Vector2) -> void:
 			self.poly = p
 			self.ind = i
 			self.original = o
 			self.new = n
 	
 	class ActionDeletePolygon extends Node:
-		var poly : Editor.Polygon
-		func _init(p : Editor.Polygon) -> void:
+		var poly : Polygon
+		func _init(p : Polygon) -> void:
 			self.poly = p
 
 class Stamper extends Tool:
@@ -387,7 +387,7 @@ class Stamper extends Tool:
 		
 		if stamp is ActorBase:
 			draw_actor(fac)
-		elif stamp is Editor.Polygon:
+		elif stamp is Polygon:
 			draw_poly(fac)
 	
 	func _unhandled_input(event: InputEvent) -> void:
@@ -423,7 +423,7 @@ class Stamper extends Tool:
 		menu.stamp_picked.connect(func(thing : Variant) -> void: stamp = thing)
 	
 	func is_stamp(thing : Variant) -> Variant:
-		if thing is ActorBase || thing is Editor.Polygon:
+		if thing is ActorBase || thing is Polygon:
 			return thing
 		return null
 	
@@ -435,7 +435,7 @@ class Stamper extends Tool:
 		canvas.draw_string(editor.font, pos + stamp.rect.position + stamp.rect.size, stamp._ANAME)
 	
 	func draw_poly(fac : float) -> void:
-		stamp = stamp as Editor.Polygon
+		stamp = stamp as Polygon
 		canvas.draw_polygon_colored(stamp.points, Color(Color.RED, fac))
 	
 	class ActionStamp extends Node:

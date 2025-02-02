@@ -22,7 +22,7 @@ var level_name := ""
 ## Level author
 var level_author := ""
 ## Collection of polygons
-var polygons : Array[Editor.Polygon]
+var polygons : Array[Polygon]
 ## Collection of actors
 var actors : Array[ActorBase]
 ## Color palette (LUT)
@@ -43,7 +43,7 @@ func serialize() -> void:
 	data.polygons = {}
 	
 	for id in range(polygons.size()):
-		var poly := polygons[id] as Editor.Polygon
+		var poly := polygons[id] as Polygon
 		data.polygons[poly.rid] = {}
 		data.polygons[poly.rid]["points"] = poly.points
 		data.polygons[poly.rid]["color"] = poly.color
@@ -88,7 +88,7 @@ func deserialize(target_path : String) -> void:
 	# Load polygons
 	var keys : Array = data.polygons.keys()
 	for key in keys:
-		var polygon := Editor.Polygon.new(key)
+		var polygon := Polygon.new(key)
 		polygon.points = data.polygons[key]["points"]
 		polygon.color = data.polygons[key]["color"]
 		polygons.append(polygon)

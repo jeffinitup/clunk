@@ -28,7 +28,7 @@ func create_tool(i : int) -> Tool:
 		Vertex:
 			tool = Tool.Vertex.new()
 		Polygon:
-			tool = Tool.Polygon.new()
+			tool = Tool.Poly.new()
 		Stamper:
 			tool = Tool.Stamper.new()
 		Spline:
