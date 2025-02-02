@@ -151,7 +151,7 @@ func create_entry(t : Variant, property : Dictionary) -> HBoxContainer:
 			field.value_changed.connect(%action_manager.action_update_property.bind(t, pname))
 		TYPE_STRING:	
 			field = create_entry_string(c)
-			field.value = t.get(pname)
+			field.text = t.get(pname)
 			field.text_changed.connect(%action_manager.action_update_property.bind(t, pname))
 		TYPE_COLOR:		
 			field = create_entry_color(c)
