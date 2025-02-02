@@ -37,9 +37,9 @@ jobs:
         
       - name: web_build
         run: |
-          mkdir -v -p html/
+          mkdir -v -p ./clunk-editor/html/
           cd $PROJECT_PATH
-          godot --headless --verbose --export-release "web" ./clunk-editor/html/index.html
+          godot --headless --verbose --export-release "web" ./html/index.html
           
       - name: upload_artifact
         uses: actions/upload-artifact@v4
