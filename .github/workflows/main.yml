@@ -45,11 +45,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: html
-          path: ./html/
+          path: ./clunk-editor/html/
 
       - name: install_rsync
         run: |
-          apt-get update && apt-get install rsync curl
+          apt-get update -y && apt-get install rsync curl -y
 
       - name: sharedarraybuffer_workaround
         run: |
@@ -61,4 +61,4 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@releases/v4
         with:
           branch: gh-pages
-          folder: ./html/
+          folder: ./clunk-editor/html/
