@@ -52,17 +52,19 @@ class Select extends Tool:
 	func _unhandled_input(event : InputEvent) -> void:
 		if event is InputEventMouseMotion:
 			if current_thing:
-				total_movement += -event.relative
+				var fac := get_tree().root.get_camera_2d().zoom
+				var move := -event.relative / fac as Vector2
+				total_movement += move
 				
 				# Set polygon position
 				if current_thing is Polygon:
-					var movement := Transform2D(0, -event.relative)
+					var movement := Transform2D(0, move)
 					var moved := current_thing.points * movement as PackedVector2Array
 					current_thing.points = moved
 				
 				# Set actor position
 				if current_thing is ActorBase:
-					var movement := Transform2D(0, -event.relative)
+					var movement := Transform2D(0, move)
 					current_thing.position *= movement
 			
 			if !current_thing:
@@ -156,7 +158,7 @@ class Vertex extends Tool:
 		if event is InputEventMouseButton:
 			## Place polygon point
 			if event.button_index == MOUSE_BUTTON_LEFT && event.is_pressed():
-				var pos : Vector2 = event.position
+				var pos : Vector2 = get_global_mouse_position()
 				if !self.cur_poly:
 					var size := editor.level.polygons.size()
 					self.cur_poly = Polygon.new(size)
@@ -259,7 +261,8 @@ class Poly extends Tool:
 				
 				# Move point (temp)
 				if cur_ind != -1:
-					var movement := event.relative as Vector2
+					var fac := get_tree().root.get_camera_2d().zoom
+					var movement := event.relative / fac as Vector2
 					var moved := cur_poly.points[cur_ind] + movement
 					cur_poly.points[cur_ind] = moved
 					return
