@@ -29,7 +29,7 @@ var actors : Array[ActorBase]
 var palette : Palette = Palette.new(PackedColorArray(PAL_DEFAULT))
 
 func _init(arg : Variant = -1) -> void:
-	if arg != -1:
+	if arg is not int:
 		self.deserialize(arg)
 
 ## Writes data to binary JSON file

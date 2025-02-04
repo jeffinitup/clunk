@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dthqgv4b565b"]
+[gd_scene load_steps=9 format=3 uid="uid://dthqgv4b565b"]
 
 [ext_resource type="Script" path="res://scripts/editor.gd" id="1_ohh0g"]
 [ext_resource type="Script" path="res://scripts/draw.gd" id="2_762bk"]
 [ext_resource type="Script" path="res://scripts/action_manager.gd" id="2_klb3c"]
 [ext_resource type="Script" path="res://scripts/cell_manager.gd" id="3_h0f4w"]
+[ext_resource type="Script" path="res://scripts/cam.gd" id="3_j20l7"]
 [ext_resource type="Script" path="res://scripts/interface.gd" id="4_evutu"]
 [ext_resource type="Script" path="res://scripts/tool_manager.gd" id="5_g05hf"]
 [ext_resource type="Theme" uid="uid://c1q2tqv3nplm1" path="res://editor.tres" id="5_jei32"]
@@ -14,6 +15,9 @@ script = ExtResource("1_ohh0g")
 [node name="action_manager" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("2_klb3c")
+
+[node name="cam" type="Camera2D" parent="."]
+script = ExtResource("3_j20l7")
 
 [node name="draw" type="Node2D" parent="."]
 script = ExtResource("2_762bk")
